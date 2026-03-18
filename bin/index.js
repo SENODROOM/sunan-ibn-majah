@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-'use strict';
+import fs   from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const fs   = require('fs');
-const path = require('path');
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const majahData = JSON.parse(fs.readFileSync(path.join(__dirname, 'majah.json'), 'utf8'));
-const { hadiths, chapters } = majahData;
+const { hadiths } = majahData;
 
 const args = process.argv.slice(2);
 
@@ -15,9 +15,9 @@ function printHadith(h, mode) {
     console.log(`\n[${h.id}] ${h.arabic}\n`);
   } else if (mode === '-b') {
     console.log(`\n[${h.id}]`);
-    console.log(`Arabic:  ${h.arabic}`);
+    console.log(`Arabic:   ${h.arabic}`);
     console.log(`Narrator: ${h.english.narrator}`);
-    console.log(`English: ${h.english.text}\n`);
+    console.log(`English:  ${h.english.text}\n`);
   } else {
     console.log(`\n[${h.id}] ${h.english.narrator}`);
     console.log(h.english.text + '\n');
@@ -45,11 +45,12 @@ if (!args.length || args[0] === '--help') {
   console.log(`
 sunan-ibn-majah CLI
 
-  majah <id>           Hadith by ID
-  majah <id> -a        Arabic only
-  majah <id> -b        Arabic + English
-  majah <chapter> <n>  nth hadith in chapter
-  majah --react        Generate React hook (useMajah.js)
+  majah <id>              Hadith by ID
+  majah <id> -a           Arabic only
+  majah <id> -b           Arabic + English
+  majah <chapter> <n>     nth hadith in chapter
+  majah --search <query>  Search hadiths
+  majah --react           Generate React hook (useMajah.js)
   majah --version
   majah --help
 `);
@@ -64,6 +65,24 @@ if (args[0] === '--version') {
 
 if (args[0] === '--react') {
   generateReactHook();
+  process.exit(0);
+}
+
+if (args[0] === '--search') {
+  const query = args.slice(1).join(' ');
+  if (!query) { console.log('Usage: majah --search <query>'); process.exit(1); }
+  const results = hadiths.filter(h =>
+    h.english?.text?.toLowerCase().includes(query.toLowerCase()) ||
+    h.english?.narrator?.toLowerCase().includes(query.toLowerCase())
+  );
+  if (!results.length) { console.log(`No results for "${query}"`); process.exit(0); }
+  console.log(`\nFound ${results.length} hadith(s) for "${query}":\n`);
+  results.slice(0, 10).forEach(h => {
+    console.log(`[${h.id}] ${h.english.narrator}`);
+    console.log(h.english.text);
+    console.log('─'.repeat(60));
+  });
+  if (results.length > 10) console.log(`\n… and ${results.length - 10} more.`);
   process.exit(0);
 }
 
