@@ -1,6 +1,6 @@
 {
   "name": "sunan-ibn-majah",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Complete Sunan Ibn Majah hadith collection. Tiny package (~3KB), data from CDN. CLI + Node.js + React/Vue/Vite.",
   "type": "module",
   "main": "./index.cjs",
