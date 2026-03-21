@@ -1,6 +1,6 @@
 {
   "name": "sunan-ibn-majah",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Complete Sunan Ibn Majah. Offline-first, zero dependencies. CLI + Node + React/Vue/Vite.",
   "type": "module",
   "main": "./src/index.cjs",

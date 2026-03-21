@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sunan-ibn-majah"
-version = "1.1.0"
+version = "1.1.2"
 description = "Complete Sunan Ibn Majah — 4,341 hadiths with full Arabic text and English translations. Offline-first, zero dependencies. CLI + Python library."
 authors = ["muhammadsaadamin"]
 license = "AGPL-3.0"
